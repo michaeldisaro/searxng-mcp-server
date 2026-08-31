@@ -4,7 +4,7 @@ import httpx
 import uvicorn
 import mcp.types as types
 from mcp.server import Server, ServerRequestContext
-from mcp.server.transport_security import TransportSecuritySettings
+from mcp.server.transport_security import TransportSecuritySettings, TransportSecurityMiddleware
 
 
 async def search_searxng(query: str) -> list[types.ContentBlock]:
@@ -91,12 +91,15 @@ async def handle_call_tool(
 
 def main(host: str = "0.0.0.0", port: int = 8000):
     """Main entry point for the MCP server."""
+    security_settings=TransportSecuritySettings(enable_dns_rebinding_protection=False),
+
     app = Server(
         "searxng-search",
         on_list_tools=handle_list_tools,
         on_call_tool=handle_call_tool,
-        transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
     )
+
+    app.add_middleware(TransportSecurityMiddleware, settings=security_settings)
     
     # Use Streamable HTTP transport (MCP v2 standard)
     uvicorn.run(app.streamable_http_app(), host=host, port=port)
