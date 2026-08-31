@@ -99,9 +99,7 @@ def main(host: str = "0.0.0.0", port: int = 8000):
         on_call_tool=handle_call_tool,
     )
 
-    app = server.streamable_http_app()
-
-    app.add_middleware(TransportSecurityMiddleware, settings=security_settings)
+    app = server.streamable_http_app(transport_security=security_settings)
     
     # Use Streamable HTTP transport (MCP v2 standard)
     uvicorn.run(app, host=host, port=port)
