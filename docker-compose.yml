@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+
+  searxng:
+    image: docker.io/searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    ports:
+      - "28888:8080"
+    volumes:
+      - ./searxng/config:/etc/searxng
+      - ./searxng/data:/var/cache/searxng
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:28888/
+
+  mcp-server:
+    build: .
+    container_name: searxng-mcp-server
+    ports:
+      - "28889:8000"
+    depends_on:
+      - searxng
+    environment:
+      - SEARXNG_URL=http://searxng:8080
+    restart: unless-stopped

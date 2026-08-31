@@ -1,0 +1,11 @@
+use_default_settings: true
+
+server:
+  bind_address: '0.0.0.0'
+  secret_key: "xxx" # change this with an openssl rand -hex 32 generated key
+  image_proxy: true
+
+search:
+  formats:
+    - html
+    - json
