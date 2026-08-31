@@ -93,16 +93,18 @@ def main(host: str = "0.0.0.0", port: int = 8000):
     """Main entry point for the MCP server."""
     security_settings=TransportSecuritySettings(enable_dns_rebinding_protection=False),
 
-    app = Server(
+    server = Server(
         "searxng-search",
         on_list_tools=handle_list_tools,
         on_call_tool=handle_call_tool,
     )
 
+    app = server.streamable_http_app()
+
     app.add_middleware(TransportSecurityMiddleware, settings=security_settings)
     
     # Use Streamable HTTP transport (MCP v2 standard)
-    uvicorn.run(app.streamable_http_app(), host=host, port=port)
+    uvicorn.run(app, host=host, port=port)
 
 
 if __name__ == "__main__":
