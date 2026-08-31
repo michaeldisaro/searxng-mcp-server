@@ -91,7 +91,7 @@ async def handle_call_tool(
 
 def main(host: str = "0.0.0.0", port: int = 8000):
     """Main entry point for the MCP server."""
-    security_settings=TransportSecuritySettings(enable_dns_rebinding_protection=False),
+    security_settings=TransportSecuritySettings(enable_dns_rebinding_protection=False)
 
     server = Server(
         "searxng-search",
